@@ -18,11 +18,13 @@ from pathlib import Path
 twarc = Twarc()
 data_dirs = ['2020-01', '2020-02', '2020-03']
 
+
 def main():
     for data_dir in data_dirs:
         for path in Path(data_dir).iterdir():
             if path.name.endswith('.txt'):
                 hydrate(path)
+
 
 def hydrate(id_file):
     print('hydrating {}'.format(id_file))
@@ -35,6 +37,7 @@ def hydrate(id_file):
     with gzip.open(gzip_path, 'w') as output:
         for tweet in twarc.hydrate(id_file.open()):
             output.write(json.dumps(tweet).encode('utf8') + b"\n")
+
 
 if __name__ == "__main__":
     main()
