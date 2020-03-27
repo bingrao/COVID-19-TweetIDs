@@ -16,29 +16,22 @@ keyword_path = "./keywords.txt"
 # 2. You need to register a twitter account and create an application, then get [[access_token]],
 #    [[access_token_secret]], [[consumer_key]], [[consumer_secret]]
 #    You can refer to https://docs.inboundnow.com/guide/create-twitter-application/ for more help.
-access_token = ''
-access_token_secret = ''
-consumer_key = ''
-consumer_secret = ''
+# access_token = ''
+# access_token_secret = ''
+# consumer_key = ''
+# consumer_secret = ''
 
-# 3. You need to specify the start day that you want to retrive data and
-#    also how many days data that you need. For example in the default value,
-#    I will retreive all twittes starting from 2020-03-25 00:00:00 to 2020-03-26 00:00:00
-#    Since the twitter community is very active to talk about covid-19, there would be a
-#    lot of twittes per day. So I would suggest to download one day data when you call scripts.
-startDate = datetime(2020, 3, 25)
-nums_day = 1
-# ************************************************************************
+# 3. You need to specify the a list of days that you want to retrive data and
+date_str_list = ['03-20-2020','03-21-2020','03-22-2020','03-23-2020','03-24-2020','03-25-2020', '03-26-2020', '03-27-2020']
 
-
-# 4. Max numbers of twittes you can download.
+# 4. Max numbers of tweets you can download per day.
 max_nums_tweets = 50000
 
 # 5. The tweets will be download and save them into a jsonl file (folder: ./data/).  Since the total number of tweets
 #    may be very large so I create mulitple jsonl files to save them.  Each jsonl file have number
 #    of [[nums_per_file]] tweets.
-
 nums_per_file = 1000
+
 
 def date_range(start, end):
     current = start
@@ -50,6 +43,8 @@ def date_range(start, end):
 # A define listener to monitor data
 class TweetListener(StreamListener):
     def on_status(self, status):
+        startDate = datetime(2020, 3, 25)
+        nums_day = 1
         stopDate = startDate + timedelta(days=nums_day)
         for date in date_range(startDate, stopDate):
             status.created_at = date
@@ -63,18 +58,19 @@ def get_data_stream(auth, hashtags=u"#Syria"):
     stream.filter(track=[hashtags])
 
 
-def get_data_api(auth, hashtags=u"#Coronavirus"):
+def get_one_day_data_api(auth, hashtags=u"#Coronavirus", startDate=datetime(2020, 3, 25)):
+    logging.info("Retreive all tweets on %s", startDate.date())
+    logging.info("The Query Key words: %s", hashtags)
+
     count_item = 0
     count_file = 0
     # Create API object
     api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-    stopDate = startDate + timedelta(days=nums_day)
-
+    stopDate = startDate + timedelta(days=1)
     root_path = "./data/" + str(startDate.date()) + "/"
     Path(root_path).mkdir(parents=True, exist_ok=True)
     output_path = root_path + str(count_file) + ".jsonl"
     output = open(output_path, 'wb')
-
 
     try:
         for tweet in tweepy.Cursor(api.search, q=keyword, since=startDate, until=stopDate,
@@ -108,7 +104,7 @@ def get_data_api(auth, hashtags=u"#Coronavirus"):
     finally:
         output.close()
         logging.info("[Done]The file %s contain %d twittes ...", output_path, count_item % nums_per_file)
-        logging.info("The total nums of tweets: %d", count_item)
+        logging.info("The total nums of tweets: %d\n", count_item)
 
 
 if __name__ == "__main__":
@@ -120,6 +116,7 @@ if __name__ == "__main__":
     with open(keyword_path, 'r') as f:
         mylist = f.read().splitlines()
     keyword = " OR ".join(list(map(lambda x: '"' + x + '"', mylist)))
-    logging.info("The Query Key words: %s", keyword)
 
-    get_data_api(auth=auth, hashtags=keyword)
+    for date_str in date_str_list:
+        date_object = datetime.strptime(date_str, '%m-%d-%Y')
+        get_one_day_data_api(auth=auth, hashtags=keyword, startDate=date_object)
