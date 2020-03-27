@@ -1,9 +1,12 @@
-# COVID-19-TweetIDs
+# COVID-19-Tweets Data Collection
 
 The repository contains an ongoing collection of tweets IDs associated with the novel coronavirus COVID-19 (SARS-CoV-2), which commenced on January 28, 2020. We used the Twitter’s search API to gather historical Tweets from the preceding 7 days, leading to the first Tweets in our dataset dating back to January 22, 2020. We leveraged Twitter’s streaming API to follow specified accounts and also collect in real-time tweets that mention specific keywords. To comply with Twitter’s [Terms of Service](https://developer.twitter.com/en/developer-terms/agreement-and-policy), we are only publicly releasing the Tweet IDs of the collected Tweets. The data is released for non-commercial research use. 
 
-The associated paper to this repository can be found here: [#COVID-19: The First Public Coronavirus Twitter Dataset](https://arxiv.org/abs/2003.07372)
+In this repository, we provides two mehtods to download tweets from twittes server. 
+# Method 1 (See details in collecting_data.py)
+In this method, we use tweepy API to communicate with twitter server directly to download dat within a time span. 
 
+# Method 2 (See details in hydrate.py)
 ## Data Organization
 The Tweet-IDs are organized as follows:
 * Tweet-ID files are stored in folders that indicate the year and month of the collection (YEAR-MONTH). 
@@ -42,12 +45,12 @@ Run the script. The hydrated Tweets will be stored in the same folder as the Twe
 python3 hydrate.py
 ```
 
-# Data Usage Agreement
+## Data Usage Agreement
 This dataset is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)). By using this dataset, you agree to abide by the stipulations in the license, remain in compliance with Twitter’s [Terms of Service](https://developer.twitter.com/en/developer-terms/agreement-and-policy), and cite the following manuscript: 
 
 Emily Chen, Kristina Lerman, and Emilio Ferrara. 2020. #COVID-19: The First Public Coronavirus Twitter Dataset.  arXiv:cs.SI/2003.07372, 2020
 
-# Statistics Summary (v1.1)
+## Statistics Summary (v1.1)
 Number of Tweets : **63,616,072**
 
 Language Breakdown 
@@ -64,7 +67,7 @@ Language Breakdown
 | (undefined)     | und     | 1,110,165        | 1.75%              |
 | Turkish         | tr      | 570,744          | 0.90%              |
 
-# Known Gaps
+## Known Gaps
 | Date          | Time              |
 |-------------  |-----              |
 | 2/1/2020      | 4:00 - 9:00 UTC   |
@@ -73,8 +76,3 @@ Language Breakdown
 | 2/23/2020     | 0:00 - 24:00 UTC  |
 | 2/24/2020     | 0:00 - 4:00 UTC   |
 | 2/25/2020     | 0:00 - 3:00 UTC   |
-
-# Inquiries
-If you have technical questions about the data collection, please contact Emily Chen at **echen920[at]usc[dot]edu**.
-
-If you have any further questions about this dataset please contact Dr. Emilio Ferrara at **emiliofe[at]usc[dot]edu**.
