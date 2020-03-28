@@ -69,7 +69,7 @@ def get_one_day_data_api(auth, hashtags=u"#Coronavirus", startDate=datetime(2020
     stopDate = startDate + timedelta(days=1)
     root_path = "./data/" + str(startDate.date()) + "/"
     Path(root_path).mkdir(parents=True, exist_ok=True)
-    output_path = root_path + str(count_file) + ".jsonl"
+    output_path = root_path +str(startDate.date())+"-"+str(count_file) + ".jsonl"
     output = open(output_path, 'wb')
 
     try:
@@ -78,7 +78,7 @@ def get_one_day_data_api(auth, hashtags=u"#Coronavirus", startDate=datetime(2020
                                    wait_on_rate_limit=True, lang="en").items(max_nums_tweets):
             try:
                 if count_item % nums_per_file == 0 and count_file != 0:
-                    output_path = root_path + str(count_file) + ".jsonl"
+                    output_path = root_path +str(startDate.date())+"-"+str(count_file) + ".jsonl"
                     output = open(output_path, 'wb')
 
                 output.write(json.dumps(tweet._json).encode('utf8') + b"\n")
